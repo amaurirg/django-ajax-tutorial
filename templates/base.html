@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    {% comment %}<link rel="stylesheet" href="{% static 'css/style.css' %}">{% endcomment %}
+    <title>{% block title %} | Basic AJAX Demo{% endblock %}</title>
+    <style>
+        li {
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6 text-center mt-5">
+            {% block left-column %}{% endblock %}
+        </div>
+        <div class="col-6 text-center mt-5">
+            {% block right-column %}{% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function (){
+        var csrf = $('input[name=csrfmiddlewaretoken]').val();
+    $(".btn").click(function (){
+        $.ajax({
+            url: '',
+            type: 'get',
+            data: {
+                button_text: $(this).text()
+            },
+            success: function (response){
+                $(".btn").text(response.seconds);
+                $('#seconds').append(`<li>${response.seconds}</li>`)
+            }
+        });
+    });
+    $('#seconds').on('click', 'li', function (){
+        $.ajax({
+            url: '',
+            type: 'post',
+            data: {
+                text: $(this).text(),
+                csrfmiddlewaretoken: csrf
+            },
+            success: function (response){
+                $('#right').append(`<li>${response.data}</li>`)
+            }
+        })
+    })
+});
+
+</script>
+
+
+
+
+
+{% comment %}<script src="{% static 'js/main.js' %}"></script>{% endcomment %}
+</html>
